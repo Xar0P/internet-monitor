@@ -4,6 +4,7 @@ import sys
 from win10toast import ToastNotifier
 from datetime import datetime
 import pandas as pd
+from playsound import playsound
 
 
 class MissingArgs(Exception):
@@ -53,10 +54,13 @@ try:
     print(f'Download: {download_speed:.2f}\nUpload: {upload_speed:.2f}')
 
     if download_speed < min_download and upload_speed < min_upload:
+        playsound('./sound.mp3')
         show_toast('Velocidade de download e upload estão abaixo do esperado.')
     elif download_speed < min_download:
+        playsound('./sound.mp3')
         show_toast('Velocidade de download está abaixo do esperado.')
     elif upload_speed < min_upload:
+        playsound('./sound.mp3')
         show_toast('Velocidade de upload está abaixo do esperado.')
     else:
         print('Está tudo OK.')
