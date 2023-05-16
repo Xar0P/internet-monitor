@@ -13,3 +13,4 @@ var/
 .installed.cfg
 *.egg
 report.csv
+.env

@@ -5,15 +5,15 @@ from win10toast import ToastNotifier
 from datetime import datetime
 import pandas as pd
 from playsound import playsound
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
 
 class MissingArgs(Exception):
-    "Está faltando argumentos para a execução do script"
-    pass
-
-
-class LowSpeed(Exception):
-    "Velocidade abaixo do esperado"
     pass
 
 
@@ -23,11 +23,6 @@ def notify(msg):
     notification = ToastNotifier()
     notification.show_toast(
         'Internet baixa', msg, duration=10)
-
-
-def validate():
-    if len(sys.argv) < 3:
-        raise MissingArgs
 
 
 def speedtest():
@@ -54,11 +49,13 @@ def saveToCSV(download_speed, upload_speed, ping, date):
 
 
 try:
-    validate()
+    if os.environ.get("MIN_DOWNLOAD") is None or os.environ.get("MIN_UPLOAD") is None:
+        raise MissingArgs
+
     out, err, errcode = speedtest()
 
-    min_download = float(sys.argv[1])
-    min_upload = float(sys.argv[2])
+    min_download = float(os.environ.get("MIN_DOWNLOAD"))
+    min_upload = float(os.environ.get("MIN_UPLOAD"))
 
     speed = json.loads(out)  # Transformar em JSON
 
@@ -79,4 +76,4 @@ try:
 
     saveToCSV(download_speed, upload_speed, ping, date)
 except MissingArgs:
-    print('Necessário mínimo de internet de download e upload aceitável.')
+    print('Velocidade mínima de download ou upload não foi definido, execute o script config.bat')
