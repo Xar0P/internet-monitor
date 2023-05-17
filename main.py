@@ -41,9 +41,9 @@ def ISOtoHuman(dateISO):
     return datetime.fromtimestamp(timestamp)
 
 
-def saveToCSV(download_speed, upload_speed, ping, date):
-    df = pd.DataFrame({'DOWNLOAD_SPEED': [f'{download_speed:.2f}Mbps'], 'UPLOAD_SPEED': [
-                      f'{upload_speed:.2f}Mbps'], 'PING': [f'{ping:.2f}ms'], 'DATE': [date]})
+def saveToCSV(download_speed, upload_speed, ping, date, hour):
+    df = pd.DataFrame({'DOWNLOAD_SPEED': [f'{download_speed:.2f}'.replace('.', ',')], 'UPLOAD_SPEED': [
+                      f'{upload_speed:.2f}'.replace('.', ',')], 'PING': [f'{ping:.2f}'.replace('.', ',')], 'DATE': [date], 'HOUR': [hour]})
 
     df.to_csv('report.csv', mode='a', index=False, header=False)
 
@@ -63,7 +63,7 @@ try:
     download_speed = speed['download']['bandwidth'] * 8 / 1_000_000
     upload_speed = speed['upload']['bandwidth'] * 8 / 1_000_000
     ping = speed['ping']['latency']
-    date = ISOtoHuman(speed['timestamp'])
+    full_date = f"{ISOtoHuman(speed['timestamp'])}"
 
     if download_speed < min_download and upload_speed < min_upload:
         notify('Velocidade de download e upload estão abaixo do esperado.')
@@ -74,6 +74,11 @@ try:
     else:
         print('Está tudo OK.')
 
-    saveToCSV(download_speed, upload_speed, ping, date)
+    date = full_date.split(' ')[0]
+    hour = full_date.split(' ')[1]
+
+    saveToCSV(download_speed, upload_speed, ping, date, hour)
 except MissingArgs:
     print('Velocidade mínima de download ou upload não foi definido, execute o script config.bat')
+except KeyError:
+    print('Ocorreu um erro no speedtest')
