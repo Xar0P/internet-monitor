@@ -1,13 +1,7 @@
 autopep8==2.0.2
-numpy==1.24.3
-pandas==2.0.1
 playsound==1.2.2
 pycodestyle==2.10.0
 pypiwin32==223
-python-dateutil==2.8.2
 python-dotenv==1.0.0
-pytz==2023.3
 pywin32==306
-six==1.16.0
-tzdata==2023.3
 win10toast==0.9

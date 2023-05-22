@@ -1,13 +1,12 @@
 from subprocess import Popen, PIPE
 import json
-import sys
 from win10toast import ToastNotifier
 from datetime import datetime
-import pandas as pd
 from playsound import playsound
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
+import json
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -41,11 +40,26 @@ def ISOtoHuman(dateISO):
     return datetime.fromtimestamp(timestamp)
 
 
-def saveToCSV(download_speed, upload_speed, ping, date, hour):
-    df = pd.DataFrame({'DOWNLOAD_SPEED': [f'{download_speed:.2f}'.replace('.', ',')], 'UPLOAD_SPEED': [
-                      f'{upload_speed:.2f}'.replace('.', ',')], 'PING': [f'{ping:.2f}'.replace('.', ',')], 'DATE': [date], 'HOUR': [hour]})
+def saveToJson(download_speed, upload_speed, ping, date, hour):
+    filename = './report.json'
 
-    df.to_csv('report.csv', mode='a', index=False, header=False)
+    obj = {
+        "download_speed": download_speed, "upload_speed": upload_speed, "ping": ping, "date": date, "hour": hour
+    }
+
+    if not os.path.isfile(filename):
+        with open(filename, "w") as outfile:
+            json.dump([obj], outfile)
+    else:
+        with open(filename) as outfile:
+            jsonObj = json.load(outfile)
+
+        jsonObj.append(obj)
+
+        with open(filename, 'w') as file:
+            json.dump(jsonObj, file,
+                      indent=4,
+                      separators=(',', ': '))
 
 
 try:
@@ -77,7 +91,7 @@ try:
     date = full_date.split(' ')[0]
     hour = full_date.split(' ')[1]
 
-    saveToCSV(download_speed, upload_speed, ping, date, hour)
+    saveToJson(download_speed, upload_speed, ping, date, hour)
 except MissingArgs:
     print('Velocidade mínima de download ou upload não foi definido, execute o script config.bat')
 except KeyError:
