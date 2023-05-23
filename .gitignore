@@ -14,4 +14,5 @@ var/
 *.egg
 report.csv
 .env
-report.json
+full_report.json
+limited_report.json

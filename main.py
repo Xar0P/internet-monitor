@@ -40,9 +40,7 @@ def ISOtoHuman(dateISO):
     return datetime.fromtimestamp(timestamp)
 
 
-def saveToJson(download_speed, upload_speed, ping, date, hour):
-    filename = './report.json'
-
+def saveToJson(download_speed, upload_speed, ping, date, hour, filename, isLimited=False):
     obj = {
         "download_speed": download_speed, "upload_speed": upload_speed, "ping": ping, "date": date, "hour": hour
     }
@@ -53,6 +51,11 @@ def saveToJson(download_speed, upload_speed, ping, date, hour):
     else:
         with open(filename) as outfile:
             jsonObj = json.load(outfile)
+
+        if isLimited:
+            print(len(jsonObj))
+            if len(jsonObj) == 15:
+                jsonObj.pop(0)
 
         jsonObj.append(obj)
 
@@ -91,7 +94,10 @@ try:
     date = full_date.split(' ')[0]
     hour = full_date.split(' ')[1]
 
-    saveToJson(download_speed, upload_speed, ping, date, hour)
+    saveToJson(download_speed, upload_speed, ping,
+               date, hour, './full_report.json')
+    saveToJson(download_speed, upload_speed, ping, date,
+               hour, './limited_report.json', True)
 except MissingArgs:
     print('Velocidade mínima de download ou upload não foi definido, execute o script config.bat')
 except KeyError:
