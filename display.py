@@ -16,7 +16,9 @@ def read_data_from_json(filename):
         y1.append(d['download_speed'])
         y2.append(d['upload_speed'])
         y3.append(d['ping'])
-        x.append(f"{d['hour']}")
+        fulltime = f"{d['hour']}"
+        hour = fulltime.split(":")[0] + ":" + fulltime.split(":")[1]
+        x.append(hour)
 
     return x, y1, y2, y3
 
