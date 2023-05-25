@@ -54,6 +54,6 @@ fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(8, 6))
 
 ani = animation.FuncAnimation(fig, update_graph, interval=1000)
 
-plt.subplots_adjust(hspace=2.0)
+plt.subplots_adjust(hspace=5.0)
 
 plt.show()
