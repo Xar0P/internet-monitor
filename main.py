@@ -95,9 +95,9 @@ try:
     hour = full_date.split(' ')[1]
 
     saveToJson(download_speed, upload_speed, ping,
-               date, hour, './full_report.json')
+               date, hour, f'./reports/{date}.json')
     saveToJson(download_speed, upload_speed, ping, date,
-               hour, './limited_report.json', True)
+               hour, './reports/limited_report.json', True)
 except MissingArgs:
     print('Velocidade mínima de download ou upload não foi definido, execute o script config.bat')
 except KeyError:

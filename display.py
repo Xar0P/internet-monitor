@@ -25,7 +25,7 @@ def read_data_from_json(filename):
 
 def update_graph(frame):
     # Atualizar dados a partir do arquivo
-    x, y1, y2, y3 = read_data_from_json('limited_report.json')
+    x, y1, y2, y3 = read_data_from_json('./reports/limited_report.json')
 
     # Limpar os gráficos existentes
     for ax in axes.flatten():
